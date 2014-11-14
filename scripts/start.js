@@ -17,7 +17,6 @@ require.config({
     }
 });
 
-
 require(['kineticjs', 'objects'],function(Kinetic, obj){
 
     // Stage and background setup
@@ -53,7 +52,9 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
 
     var a = obj.trunk(150,200);
     var b = obj.trunk(350,300);
-
+    var target = obj.food(120,120,'gold');
+    //
+    l.add(target);
     l.add(a);
     l.add(b);
     b.start();
