@@ -3,7 +3,7 @@
  */
 define(['kineticjs'],
     function (Kinetic) {
-        return {
+        return  {
             trunk: function (x, y) {
                 var imageObj = new Image();
                 imageObj.src = "resources/trunk1.png";
@@ -11,7 +11,7 @@ define(['kineticjs'],
                     x: x,
                     y: y,
                     image: imageObj,
-                    animation: 'roll',
+                    animation: 'idle',
                     animations: {
                         // x, y, width, height (9 frames)
                         idle: [
