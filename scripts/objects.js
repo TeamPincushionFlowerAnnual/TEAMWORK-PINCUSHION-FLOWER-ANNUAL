@@ -108,6 +108,39 @@ define(['kineticjs'],
                 });
                 imageObj.src = imageFile;
                 return blob;
+            },
+
+            hero: function (x, y){
+                var imageObj = new Image();
+                imageObj.src = 'resources/mainChar.png';
+
+
+                var blob = new Kinetic.Sprite({
+                    x: x,
+                    y: y,
+                    width:50,
+                    height:55,
+                    image: imageObj,
+                    animation: 'idle',
+                    animations: {
+                        // x, y, width, height (9 frames)
+                        idle: [
+                            0, 0, 50, 55,
+                            0, 0, 50, 55
+                        ],
+                        run: [
+                            0, 0, 50, 55,
+                            50, 0, 50, 55,
+                            100, 0, 50, 55,
+                            150, 0, 50, 55
+                        ]
+                    },
+                    frameRate: 12,
+                    frameIndex: 0
+                });
+
+
+                return blob;
             }
         }
     }

@@ -21,13 +21,12 @@ require.config({
 require(['kineticjs', 'objects'],function(Kinetic, obj){
 
     // Stage and background setup
+    // todo: Fix z indexes so that the trees show behind the border
     var stage = new Kinetic.Stage({
         width: 800,
         height: 600,
         container: 'stage-container'
     });
-    obj['stage'] = stage;
-    console.log(obj.stage);
     loadBackground('bkground.jpg');
     function loadBackground(image) {
         var backgroundImage = new Image();
@@ -42,7 +41,7 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
                 image: backgroundImage
             });
             bgrdlayer.add(levelBackground);
-            obj.stage.add(bgrdlayer);
+            stage.add(bgrdlayer);
             bgrdlayer.setZIndex(0);
         };
 
@@ -50,7 +49,9 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
     }
 
 
-    //testing
+    //testing (Engine)
+
+    // array with all trees
     var trees = [
         [],
         [],
@@ -60,31 +61,59 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
         [],
         []
     ];
-    var testTree = obj.trunk(800, 300);
+    // layers for our game
     var treesLayer = new Kinetic.Layer();
-    treesLayer.add(testTree);
     stage.add(treesLayer);
 
-    var testTreeTwo = obj.trunk(800, 350);
-    treesLayer.add(testTreeTwo);
+    var heroLayer = new Kinetic.Layer();
+    stage.add(heroLayer);
 
-    testTree.start();
+    // main character create and put on screen
+    var hero = obj.hero(400, 490);
+    heroLayer.add(hero);
+
+    // 7 trees for the 7 rows (Create, add to screen, add to array of trees)
+    var testTree = obj.trunk(800, 170);
+    treesLayer.add(testTree);
+    var testTreeTwo = obj.trunk(800, 220);
+    treesLayer.add(testTreeTwo);
+    var testTreeThree = obj.trunk(800, 270);
+    treesLayer.add(testTreeThree);
+    var testTreeFour = obj.trunk(800, 320);
+    treesLayer.add(testTreeFour);
+    var testTreeFive = obj.trunk(800, 370);
+    treesLayer.add(testTreeFive);
+    var testTreeSix = obj.trunk(800, 420);
+    treesLayer.add(testTreeSix);
+    var testTreeSeven = obj.trunk(800, 470);
+    treesLayer.add(testTreeSeven);
 
     trees[0].push(testTree);
     trees[1].push(testTreeTwo);
+    trees[2].push(testTreeThree);
+    trees[3].push(testTreeFour);
+    trees[4].push(testTreeFive);
+    trees[5].push(testTreeSix);
+    trees[6].push(testTreeSeven);
+
+    // animation of moving trees
     function executeFrame(){
         for (var i = 0; i < trees.length; i++){
             for (var j = 0; j < trees[i].length; j++){
-                trees[i][j].x(trees[i][j].x() - 7/(i+1));
+                trees[i][j].x(trees[i][j].x() - (10 - i));
             }
         }
         clearTrees();
         checkTrees();
         setTimeout(executeFrame, 100);
     }
-
+    // start of animation
     executeFrame();
+
+    // initial random distance between trees
     var distance = randomGenerator(50, 100);
+
+    // function for generating new trees
     function checkTrees(){
         var lastTrees = [];
 
@@ -106,7 +135,7 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
             }
         }
     }
-
+    // function for clearing trees that are obsolete
     function clearTrees() {
         for (var i = 0; i < trees.length; i++){
             var t = trees[i][0];
@@ -117,7 +146,7 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
             }
         }
     }
-
+    // helper for generating random numbers in range
     function randomGenerator(min, max){
         var returnValue = Math.floor((max - min) * Math.random() + min);
         return returnValue;

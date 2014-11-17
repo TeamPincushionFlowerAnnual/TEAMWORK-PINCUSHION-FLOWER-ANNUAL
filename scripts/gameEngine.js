@@ -10,6 +10,8 @@ define(['kineticjs', 'objects'], function(Kinetic, obj){
         container: 'stage-container'
     });
 
+
+
     var trees = [
         [],
         [],
