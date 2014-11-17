@@ -75,14 +75,14 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
     function executeFrame(){
         for (var i = 0; i < trees.length; i++){
             for (var j = 0; j < trees[i].length; j++){
-                trees[i][j].x(trees[i][j].getX() - 5);
+                trees[i][j].x(trees[i][j].x() - 7/(i+1));
             }
         }
+        clearTrees();
         checkTrees();
-        setTimeout(executeFrame, 150);
-
-
+        setTimeout(executeFrame, 100);
     }
+
     executeFrame();
     var distance = randomGenerator(50, 100);
     function checkTrees(){
@@ -96,11 +96,10 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
         }
 
         for (var j = 0; j < lastTrees.length; j++){
-            var checker = lastTrees[j].getX() + 150 + distance < 800;
-            console.log(checker);
+            var checker = lastTrees[j].x() + lastTrees[j].width() + distance < 800;
             if(checker){
                 distance = randomGenerator(50, 100);
-                var newTree = obj.trunk(800, lastTrees[j].getY());
+                var newTree = obj.trunk(800, lastTrees[j].y(), randomGenerator(1,3));
                 treesLayer.add(newTree);
                 newTree.start();
                 trees[j].push(newTree);
@@ -108,8 +107,19 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
         }
     }
 
+    function clearTrees() {
+        for (var i = 0; i < trees.length; i++){
+            var t = trees[i][0];
+            if(t) {
+                if (t.x() + t.width() < 0) {
+                    trees[i].shift();
+                }
+            }
+        }
+    }
+
     function randomGenerator(min, max){
-        var returnValue = (max - min) * Math.random() + min;
+        var returnValue = Math.floor((max - min) * Math.random() + min);
         return returnValue;
     }
 

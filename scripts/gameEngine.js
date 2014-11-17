@@ -24,5 +24,4 @@ define(['kineticjs', 'objects'], function(Kinetic, obj){
     treesLayer.add(testTree);
     stage.add(treesLayer);
     trees[0].push(testTree);
-
 });

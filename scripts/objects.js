@@ -4,35 +4,60 @@
 define(['kineticjs'],
     function (Kinetic) {
         return  {
-            trunk: function (x, y) {
+            trunk: function (x, y, type) {
                 var imageObj = new Image();
-                imageObj.src = "resources/trunk1.png";
+                var imageFile = 'resources/trunk1.png';
+                var picWidth = 150;
+                var picHeight = 50;
+
+                switch (type){
+                    case 1:
+                        imageFile = 'resources/trunk1.png';
+                        picWidth = 150;
+                        picHeight = 50;
+                        break;
+                    case 2:
+                        imageFile = 'resources/trunk2.png';
+                        picWidth = 90;
+                        picHeight = 50;
+                        break;
+                    case 3:
+                        break;
+                }
+
+                imageObj.src = imageFile;
+
+
                 var blob = new Kinetic.Sprite({
                     x: x,
                     y: y,
+                    width:picWidth,
+                    height:picHeight,
                     image: imageObj,
                     animation: 'idle',
                     animations: {
                         // x, y, width, height (9 frames)
                         idle: [
-                            0, 0, 150, 50,
-                            0, 0, 150, 50
+                            0, 0, picWidth, 50,
+                            0, 0, picWidth, 50
                         ],
                         roll: [
-                            0, 0, 150, 50,
-                            0, 50, 150, 50,
-                            0, 100, 150, 50,
-                            0, 150, 150, 50,
-                            0, 200, 150, 50,
-                            0, 250, 150, 50,
-                            0, 300, 150, 50,
-                            0, 350, 150, 50,
-                            0, 400, 150, 50
+                            0, 0, picWidth, 50,
+                            0, 50, picWidth, 50,
+                            0, 100, picWidth, 50,
+                            0, 150, picWidth, 50,
+                            0, 200, picWidth, 50,
+                            0, 250, picWidth, 50,
+                            0, 300, picWidth, 50,
+                            0, 350, picWidth, 50,
+                            0, 400, picWidth, 50
                         ]
                     },
                     frameRate: 10,
                     frameIndex: 0
                 });
+
+
                 return blob;
             },
 
