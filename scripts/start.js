@@ -71,6 +71,7 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
     // main character create and put on screen
     var hero = obj.hero(400, 490);
     heroLayer.add(hero);
+    hero.start();
 
     // 7 trees for the 7 rows (Create, add to screen, add to array of trees)
     var testTree = obj.trunk(800, 170);
@@ -100,15 +101,18 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
     function executeFrame(){
         for (var i = 0; i < trees.length; i++){
             for (var j = 0; j < trees[i].length; j++){
-                trees[i][j].x(trees[i][j].x() - (10 - i));
+                var speed =  (Math.abs(3 - i));
+
+                trees[i][j].x(trees[i][j].x() - (speed || 2));
             }
         }
         clearTrees();
         checkTrees();
-        setTimeout(executeFrame, 100);
+        requestAnimationFrame(executeFrame,document);
+        //setTimeout(executeFrame, 100);
     }
     // start of animation
-    executeFrame();
+    requestAnimationFrame(executeFrame,document);
 
     // initial random distance between trees
     var distance = randomGenerator(50, 100);
