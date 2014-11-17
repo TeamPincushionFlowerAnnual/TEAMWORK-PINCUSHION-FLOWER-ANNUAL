@@ -121,7 +121,7 @@ define(['kineticjs'],
                     width:50,
                     height:55,
                     image: imageObj,
-                    animation: 'idle',
+                    animation: 'run',
                     animations: {
                         // x, y, width, height (9 frames)
                         idle: [

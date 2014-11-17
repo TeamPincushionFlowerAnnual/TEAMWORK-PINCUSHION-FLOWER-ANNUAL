@@ -18,16 +18,16 @@ require.config({
     }
 });
 
-require(['kineticjs', 'objects'],function(Kinetic, obj){
+
+require(['kineticjs', 'objects'], function (Kinetic, obj) {
 
     // Stage and background setup
-    // todo: Fix z indexes so that the trees show behind the border
     var stage = new Kinetic.Stage({
         width: 800,
         height: 600,
         container: 'stage-container'
     });
-    loadBackground('bkground.jpg');
+
     function loadBackground(image) {
         var backgroundImage = new Image();
         var bgrdlayer = new Kinetic.Layer();
@@ -42,12 +42,11 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
             });
             bgrdlayer.add(levelBackground);
             stage.add(bgrdlayer);
-            bgrdlayer.setZIndex(0);
+            bgrdlayer.setZIndex(1);
         };
 
         backgroundImage.src = 'resources/' + image;
     }
-
 
     //testing (Engine)
 
@@ -62,14 +61,18 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
         []
     ];
     // layers for our game
+
     var treesLayer = new Kinetic.Layer();
     stage.add(treesLayer);
 
     var heroLayer = new Kinetic.Layer();
     stage.add(heroLayer);
 
+    loadBackground('bkground.png');
+
     // main character create and put on screen
-    var hero = obj.hero(400, 490);
+
+    var hero = obj.hero(400, 480);
     heroLayer.add(hero);
     hero.start();
 
@@ -98,62 +101,105 @@ require(['kineticjs', 'objects'],function(Kinetic, obj){
     trees[6].push(testTreeSeven);
 
     // animation of moving trees
-    function executeFrame(){
-        for (var i = 0; i < trees.length; i++){
-            for (var j = 0; j < trees[i].length; j++){
-                var speed =  (Math.abs(3 - i));
-
+    function executeFrame() {
+        for (var i = 0; i < trees.length; i++) {
+            for (var j = 0; j < trees[i].length; j++) {
+                var speed = (Math.abs(3 - i));
                 trees[i][j].x(trees[i][j].x() - (speed || 2));
             }
         }
+
         clearTrees();
         checkTrees();
-        requestAnimationFrame(executeFrame,document);
-        //setTimeout(executeFrame, 100);
+        requestAnimationFrame(executeFrame, document);
     }
+
     // start of animation
-    requestAnimationFrame(executeFrame,document);
+    requestAnimationFrame(executeFrame, document);
 
     // initial random distance between trees
     var distance = randomGenerator(50, 100);
 
     // function for generating new trees
-    function checkTrees(){
+    function checkTrees() {
         var lastTrees = [];
 
-        for (var i = 0; i < trees.length; i++){
+        for (var i = 0; i < trees.length; i++) {
             var t = trees[i][trees[i].length - 1];
-            if(t){
+            if (t) {
                 lastTrees.push(t)
             }
         }
 
-        for (var j = 0; j < lastTrees.length; j++){
+
+        for (var j = 0; j < lastTrees.length; j++) {
+
             var checker = lastTrees[j].x() + lastTrees[j].width() + distance < 800;
-            if(checker){
+            if (checker) {
                 distance = randomGenerator(50, 100);
-                var newTree = obj.trunk(800, lastTrees[j].y(), randomGenerator(1,3));
+                var newTree = obj.trunk(800, lastTrees[j].y(), randomGenerator(1, 3));
                 treesLayer.add(newTree);
                 newTree.start();
                 trees[j].push(newTree);
             }
         }
     }
+
     // function for clearing trees that are obsolete
     function clearTrees() {
-        for (var i = 0; i < trees.length; i++){
+        for (var i = 0; i < trees.length; i++) {
             var t = trees[i][0];
-            if(t) {
+            if (t) {
                 if (t.x() + t.width() < 0) {
                     trees[i].shift();
                 }
             }
         }
     }
+
     // helper for generating random numbers in range
-    function randomGenerator(min, max){
+    function randomGenerator(min, max) {
         var returnValue = Math.floor((max - min) * Math.random() + min);
         return returnValue;
     }
 
-} );
+    document.addEventListener("keydown", movement);
+
+    function movement(evn) {
+        var step = rowCheck(hero.y() + hero.height());
+        switch (evn.keyCode) {
+            case 38:
+                // todo: move up
+                hero.y(hero.y() -  rowCheck((hero.y() + hero.height()),'up'));
+                break;
+            case 40:
+                // todo: move down
+                hero.y(hero.y() + step);
+                break;
+            case 37:
+                hero.x(hero.x() - 10);
+                // todo: move left
+                break;
+            case 39:
+                // todo: move right
+                hero.x(hero.x() + 10);
+                break;
+        }
+    }
+
+
+    function rowCheck(point, direcetion) {
+        if (point >= 490) {
+            return 50;
+        } else if (point > 170 && point < 220) {
+            if (direcetion == 'up') {
+                return 20;
+            } else {
+                return 50;
+            }
+        } else if (point < 170) {
+            return 20;
+        }
+        return 50;
+    }
+});
