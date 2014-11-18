@@ -156,22 +156,38 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         switch (evn.keyCode) {
             case 38:
                 // todo: move up
-                hero.y(hero.y() -  rowCheck((hero.y() + hero.height()),'up'));
+                if(outOfBounds(hero.x(),hero.y() + rowCheck((step)))) {
+                    hero.y(hero.y() -  rowCheck((hero.y() + hero.height()),'up'));
+                }
                 break;
             case 40:
                 // todo: move down
-                hero.y(hero.y() + step);
+                if(outOfBounds(hero.x(),hero.y() + step + hero.height())){
+                    hero.y(hero.y() + step);
+                }
                 break;
             case 37:
-                hero.x(hero.x() - 10);
+                if(outOfBounds(hero.x() -10,hero.y())){
+                    hero.x(hero.x() - 10);
+                }
                 // todo: move left
                 break;
             case 39:
                 // todo: move right
-                hero.x(hero.x() + 10);
+                if(outOfBounds(hero.x() + 10,hero.y())) {
+                    hero.x(hero.x() + 10);
+                }
                 break;
         }
     }
+    
+    function outOfBounds(x,y) {
+        if (x > 30 && x < 670 && y < 550 && y > 130) {
+            return true
+        } else {
+            return false;
+        }
+     }
 
 
     function rowCheck(point, direcetion) {
