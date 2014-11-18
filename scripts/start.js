@@ -213,11 +213,11 @@ require(['kineticjs', 'objects'], function (Kinetic, obj) {
         if(dead == true) {
             if (lives > 0) {
                 lives -= 1;
-                // restart
+                // TODO restart with one less life
             }
             else {
                 theEnd();
-                // to do theEnd function
+                // TODO theEnd function
             }
         }
     }
