@@ -229,32 +229,20 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         }
         return 50;
     }
-
     function collision(tree, x, y) {
-
         if (x > tree.x() && x < tree.x() + tree.width() && y < tree.y() + tree.height() && y > tree.y()) {
-            return true
+            return true;
+            // TODO make hero move with the tree
         } else {
-            return false;
+            dead = true;
         }
-
-
-        //var dead = false;
-        //var rect1 = {x:trees.x, y:trees.y, width:trees.width, height:trees.height};
-        //var rect2 = {x:hero.x, y:hero.y, width:hero.width, height:hero.height};
-        //if (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x &&
-        //    rect1.y < rect2.y + rect2.height && rect1.height + rect1.y > rect2.y) {
-        //    dead = true;
-        //}
-        //if(dead == true) {
-        //    if (lives > 0) {
-        //        lives -= 1;
-        //        // TODO restart with one less life
-        //    }
-        //    else {
-        //        theEnd();
-        //        // TODO theEnd function
-        //    }
-        //}
+        if (dead == true && lives > 0) {
+            lives -= 1;
+            // TODO restart with one less life
+        }
+        else {
+            theEnd();
+            // TODO theEnd function
+        }
     }
 });
