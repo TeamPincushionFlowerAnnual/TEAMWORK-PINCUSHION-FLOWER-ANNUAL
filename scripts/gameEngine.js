@@ -4,26 +4,11 @@
 
 
 define(['kineticjs', 'objects'], function(Kinetic, obj){
-    var stage = new Kinetic.Stage({
-        width: 800,
-        height: 600,
-        container: 'stage-container'
-    });
 
+    return new function() {
+        this.startGame = function () {
+            alert(a);
+        }
 
-
-    var trees = [
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        []
-    ];
-    var testTree = obj.trunk(300, 300);
-    var treesLayer = new Kinetic.Layer();
-    treesLayer.add(testTree);
-    stage.add(treesLayer);
-    trees[0].push(testTree);
+    };
 });

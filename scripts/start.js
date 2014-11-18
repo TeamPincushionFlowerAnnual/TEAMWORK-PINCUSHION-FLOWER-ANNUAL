@@ -4,22 +4,15 @@
 
 //todo: load modules, init modules (kineticJS, objects, gameEngine)
 require.config({
-    //By default load any module IDs from js/lib
-    //baseUrl: 'js/lib',
-    //except, if the module ID starts with "app",
-    //load it from the js/app directory. paths
-    //config is relative to the baseUrl, and
-    //never includes a ".js" extension since
-    //the paths config could be for a directory.
     paths: {
         objects: 'objects',
-        kineticjs: 'libs/kinetic-v5.1.0.min'
-        //gameEngine: 'gameEngine'
+        kineticjs: 'libs/kinetic-v5.1.0.min',
+        gameEngine: 'gameEngine'
     }
 });
 
 
-require(['kineticjs', 'objects'], function (Kinetic, obj) {
+require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) {
 
     // Stage and background setup
     var stage = new Kinetic.Stage({
@@ -118,29 +111,21 @@ require(['kineticjs', 'objects'], function (Kinetic, obj) {
     requestAnimationFrame(executeFrame, document);
 
     // initial random distance between trees
-    var distance = randomGenerator(50, 100);
+    var distance = randomGenerator(10, 100);
 
     // function for generating new trees
     function checkTrees() {
-        var lastTrees = [];
-
         for (var i = 0; i < trees.length; i++) {
             var t = trees[i][trees[i].length - 1];
             if (t) {
-                lastTrees.push(t)
-            }
-        }
-
-
-        for (var j = 0; j < lastTrees.length; j++) {
-
-            var checker = lastTrees[j].x() + lastTrees[j].width() + distance < 800;
-            if (checker) {
-                distance = randomGenerator(50, 100);
-                var newTree = obj.trunk(800, lastTrees[j].y(), randomGenerator(1, 3));
-                treesLayer.add(newTree);
-                newTree.start();
-                trees[j].push(newTree);
+                var checker = t.x() + t.width() + distance < 800;
+                if (checker) {
+                    distance = randomGenerator(10, 100);
+                    var newTree = obj.trunk(800, t.y(), randomGenerator(1, 3));
+                    treesLayer.add(newTree);
+                    newTree.start();
+                    trees[i].push(newTree);
+                }
             }
         }
     }
@@ -151,7 +136,8 @@ require(['kineticjs', 'objects'], function (Kinetic, obj) {
             var t = trees[i][0];
             if (t) {
                 if (t.x() + t.width() < 0) {
-                    trees[i].shift();
+                    t.stop();
+                    delete trees[i].shift();
                 }
             }
         }
@@ -202,6 +188,7 @@ require(['kineticjs', 'objects'], function (Kinetic, obj) {
         }
         return 50;
     }
+
     function collision() {
         var dead = false;
         var rect1 = {x:trees.x, y:trees.y, width:trees.width, height:trees.height};
