@@ -154,6 +154,19 @@ define(['kineticjs'],
                 });
 
                 return blob;
+            },
+
+            live: function (x, y) {
+                var imageObject = new Image();
+                imageObject.src = 'resources/1.png';
+                var lobl = new Kinetic.Image({
+                    x: x,
+                    y: y,
+                    width: 22,
+                    height: 23,
+                    image: imageObject
+                });
+                return lobl;
             }
         }
     }

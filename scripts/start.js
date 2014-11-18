@@ -69,6 +69,7 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
     heroLayer.add(hero);
     hero.start();
 
+
     // 7 trees for the 7 rows (Create, add to screen, add to array of trees)
     var testTree = obj.trunk(800, 170);
     treesLayer.add(testTree);
@@ -111,7 +112,9 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
                 trees[i][j].x(trees[i][j].x() - (speed || 2));
                 inCollision = collision(trees[i][j], pointOfCollision.x, pointOfCollision.y);
                 if (inCollision) {
-                    hero.x(hero.x() - speed);
+                    if(outOfBounds(hero.x() - (speed || 2), hero.y())){
+                        hero.x(hero.x() - (speed || 2));
+                    }
                     if (trees[i][j].animation() != 'roll') {
                         trees[i][j].animation('roll');
                     }
@@ -128,12 +131,30 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         if (pointOfCollision.y < 530 && pointOfCollision.y > 170 && !hero.getAttr('inCollision')) {
             if (hero.animation() != 'die') {
                 hero.animation('die');
+                lives();
             }
         }
 
         clearTrees();
         checkTrees();
         requestAnimationFrame(executeFrame, document);
+    }
+    var displayHeads = [
+        obj.live(735, 240),
+        obj.live(735, 265),
+        obj.live(735, 290)
+    ];
+    for (var i = 0; i < displayHeads.length; i++){
+        heroLayer.add(displayHeads[i]);
+    }
+
+    var liveCounter = 3;
+    function lives(){
+        liveCounter -= 1;
+        displayHeads[liveCounter].image(null);
+        if(liveCounter <= 0){
+            document.getElementById('final').style.display = 'table-cell';
+        }
     }
 
     // start of animation
@@ -229,6 +250,11 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         }
         return 50;
     }
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 5e22fd0bffb3c9a1f8e6d2f2d7b9741127b13ef4
     function collision(tree, x, y) {
         if (x > tree.x() && x < tree.x() + tree.width() && y < tree.y() + tree.height() && y > tree.y()) {
             return true;
