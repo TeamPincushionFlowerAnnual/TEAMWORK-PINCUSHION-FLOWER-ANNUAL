@@ -105,6 +105,7 @@ define(['kineticjs'],
 
 
                 var blob = new Kinetic.Sprite({
+                    inCollision: false,
                     x: x,
                     y: y,
                     width:50,
@@ -139,7 +140,7 @@ define(['kineticjs'],
                     frameRate: 12,
                     frameIndex: 0
                 });
-                var frameCounter = 0;
+                var frameCounter = 10;
                 blob.on('frameIndexChange', function(){
                     if(blob.animation() == 'die'){
                         frameCounter += 1;

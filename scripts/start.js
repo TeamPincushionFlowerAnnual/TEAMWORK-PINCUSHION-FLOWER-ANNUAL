@@ -95,10 +95,39 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
 
     // animation of moving trees
     function executeFrame() {
+
+        hero.setAttr('inCollision', false);
+        var inCollision = true;
+
+
+        var pointOfCollision = {
+            x: hero.x() + (hero.width() / 2),
+            y: hero.y() + hero.height()
+        };
+
         for (var i = 0; i < trees.length; i++) {
             for (var j = 0; j < trees[i].length; j++) {
                 var speed = (Math.abs(3 - i));
                 trees[i][j].x(trees[i][j].x() - (speed || 2));
+                inCollision = collision(trees[i][j], pointOfCollision.x, pointOfCollision.y);
+                if (inCollision) {
+                    hero.x(hero.x() - speed);
+                    if (trees[i][j].animation() != 'roll') {
+                        trees[i][j].animation('roll');
+                    }
+                    if (hero.animation() != 'run') {
+                        hero.animation('run');
+                    }
+                    hero.setAttr('inCollision', true);
+                }
+                else {
+                    trees[i][j].animation('idle');
+                }
+            }
+        }
+        if (pointOfCollision.y < 530 && pointOfCollision.y > 170 && !hero.getAttr('inCollision')) {
+            if (hero.animation() != 'die') {
+                hero.animation('die');
             }
         }
 
@@ -155,39 +184,35 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         var step = rowCheck(hero.y() + hero.height());
         switch (evn.keyCode) {
             case 38:
-                // todo: move up
-                if(outOfBounds(hero.x(),hero.y() + rowCheck((step)))) {
-                    hero.y(hero.y() -  rowCheck((hero.y() + hero.height()),'up'));
+                if (outOfBounds(hero.x(), hero.y() - rowCheck((hero.y() + hero.height()), 'up'))) {
+                    hero.y(hero.y() - rowCheck((hero.y() + hero.height()), 'up'));
                 }
                 break;
             case 40:
-                // todo: move down
-                if(outOfBounds(hero.x(),hero.y() + step + hero.height())){
+                if (outOfBounds(hero.x(), hero.y() + step + hero.height())) {
                     hero.y(hero.y() + step);
                 }
                 break;
             case 37:
-                if(outOfBounds(hero.x() -10,hero.y())){
+                if (outOfBounds(hero.x() - 10, hero.y())) {
                     hero.x(hero.x() - 10);
                 }
-                // todo: move left
                 break;
             case 39:
-                // todo: move right
-                if(outOfBounds(hero.x() + 10,hero.y())) {
+                if (outOfBounds(hero.x() + 10, hero.y())) {
                     hero.x(hero.x() + 10);
                 }
                 break;
         }
     }
-    
-    function outOfBounds(x,y) {
-        if (x > 30 && x < 670 && y < 550 && y > 130) {
+
+    function outOfBounds(x, y) {
+        if (x > 30 && x < 670 && y < 550 && y > 100) {
             return true
         } else {
             return false;
         }
-     }
+    }
 
 
     function rowCheck(point, direcetion) {
@@ -205,23 +230,31 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         return 50;
     }
 
-    function collision() {
-        var dead = false;
-        var rect1 = {x:trees.x, y:trees.y, width:trees.width, height:trees.height};
-        var rect2 = {x:hero.x, y:hero.y, width:hero.width, height:hero.height};
-        if (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x &&
-            rect1.y < rect2.y + rect2.height && rect1.height + rect1.y > rect2.y) {
-            dead = true;
+    function collision(tree, x, y) {
+
+        if (x > tree.x() && x < tree.x() + tree.width() && y < tree.y() + tree.height() && y > tree.y()) {
+            return true
+        } else {
+            return false;
         }
-        if(dead == true) {
-            if (lives > 0) {
-                lives -= 1;
-                // TODO restart with one less life
-            }
-            else {
-                theEnd();
-                // TODO theEnd function
-            }
-        }
+
+
+        //var dead = false;
+        //var rect1 = {x:trees.x, y:trees.y, width:trees.width, height:trees.height};
+        //var rect2 = {x:hero.x, y:hero.y, width:hero.width, height:hero.height};
+        //if (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x &&
+        //    rect1.y < rect2.y + rect2.height && rect1.height + rect1.y > rect2.y) {
+        //    dead = true;
+        //}
+        //if(dead == true) {
+        //    if (lives > 0) {
+        //        lives -= 1;
+        //        // TODO restart with one less life
+        //    }
+        //    else {
+        //        theEnd();
+        //        // TODO theEnd function
+        //    }
+        //}
     }
 });
