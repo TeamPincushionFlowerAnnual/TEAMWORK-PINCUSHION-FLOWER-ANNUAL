@@ -236,6 +236,8 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         } else {
             dead = true;
         }
+        var lives = 100; // deklarirame jivotite v nachaloto na igrata i ako dead
+        //e ravno na true jivotite se namalqvat. Ako sa ravni na nula -> gameOver
         if (dead == true && lives > 0) {
             lives -= 1;
             // TODO restart with one less life
