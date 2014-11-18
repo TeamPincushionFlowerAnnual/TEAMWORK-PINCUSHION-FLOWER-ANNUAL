@@ -202,4 +202,23 @@ require(['kineticjs', 'objects'], function (Kinetic, obj) {
         }
         return 50;
     }
+    function collision() {
+        var dead = false;
+        var rect1 = {x:trees.x, y:trees.y, width:trees.width, height:trees.height};
+        var rect2 = {x:hero.x, y:hero.y, width:hero.width, height:hero.height};
+        if (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x &&
+            rect1.y < rect2.y + rect2.height && rect1.height + rect1.y > rect2.y) {
+            dead = true;
+        }
+        if(dead == true) {
+            if (lives > 0) {
+                lives -= 1;
+                // restart
+            }
+            else {
+                theEnd();
+                // to do theEnd function
+            }
+        }
+    }
 });
