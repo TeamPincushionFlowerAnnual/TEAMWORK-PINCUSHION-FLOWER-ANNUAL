@@ -68,13 +68,13 @@ body {
 }
 .high_scores{
   list-style: none;
-  background-color: rgb(83, 52, 19);
+  background-color: rgba(83, 52, 19, 0.7);
   border-color: #05055b;
   border-width: 15px;
   border-style: ridge;
   border-radius: 30px;
   margin: 0 auto;
-  color: white;
+  color: rgb(148, 250, 192);
   text-align: center;
   width: 800px;
   box-sizing: border-box;
@@ -85,5 +85,6 @@ body {
 .high_scores li {
   font-size: 22px;
   text-align: left;
+  margin: 5px;
 }
 
