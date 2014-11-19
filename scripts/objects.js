@@ -140,7 +140,7 @@ define(['kineticjs'],
                     frameRate: 12,
                     frameIndex: 0
                 });
-                var frameCounter = 10;
+                var frameCounter = 0;
                 blob.on('frameIndexChange', function(){
                     if(blob.animation() == 'die'){
                         frameCounter += 1;
