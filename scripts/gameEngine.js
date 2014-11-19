@@ -125,5 +125,37 @@ define(['kineticjs', 'objects'], function(Kinetic, obj){
             var returnValue = Math.floor((max - min) * Math.random() + min);
             return returnValue;
         }
+
+        this.saveScore = function(name, score){
+            if(!localStorage['scores']){
+                var scores = [];
+                localStorage['scores'] = JSON.stringify(scores);
+            }
+
+            var previousScores = JSON.parse(localStorage['scores']);
+            previousScores.push({name:name, score: score});
+            localStorage['scores'] = JSON.stringify(previousScores);
+        };
+
+        this.loadScores = function(){
+            if(!localStorage['scores']){
+                var scores = [];
+                localStorage['scores'] = JSON.stringify(scores);
+            }
+            var previousScores = JSON.parse(localStorage['scores']);
+            Array.sort(previousScores, function(a,b){
+                return parseInt(a.score) - parseInt(b.score);
+            });
+
+            var list = document.createElement('ul');
+
+            for(var index in previousScores){
+
+                var item = document.createElement('li');
+                item.innerText = (index+1).toString() + previousScores[index].name + ' - ' + previousScores[index].name;
+                list.appendChild(item);
+            }
+            return list;
+        }
     };
 });
