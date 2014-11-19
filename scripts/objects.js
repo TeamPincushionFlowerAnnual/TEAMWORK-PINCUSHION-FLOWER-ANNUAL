@@ -96,6 +96,9 @@ define(['kineticjs'],
                 var imageObj = new Image();
 
                 var blob = new Kinetic.Image({
+                    baseX:x,
+                    baseY:y,
+                    reset: function (){ blob.x(this.baseX); blob.y(this.baseY)},
                     x: x,
                     y: y,
                     width: imgWidth,

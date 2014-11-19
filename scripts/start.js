@@ -92,13 +92,20 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
             }
         }
         if (pointOfCollision.y < 530 && pointOfCollision.y > 170 && !hero.getAttr('inCollision')) {
+            timeout = 1000;
             if (hero.animation() != 'die') {
                 hero.animation('die');
+                if(hero.getAttr('carryingObject')){
+                    var reset = hero.getAttr('carryingObject');
+                    hero.setAttr('carryingObject', null);
+                    reset.x(reset.getAttr('baseX'));
+                    reset.y(reset.getAttr('baseY'));
+                }
                 if(lives()){
                     document.removeEventListener('keydown', movement);
                     return;
                 }
-                timeout = 1000;
+
             }
         }
         
@@ -123,8 +130,7 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
 
         engine.clearTrees(trees);
         engine.checkTrees(trees,treesLayer);
-        setTimeout(timeout);
-        requestAnimationFrame(executeFrame);
+        setTimeout(function(){requestAnimationFrame(executeFrame);}, timeout);
     }
 
     // Movement Controls
