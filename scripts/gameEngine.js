@@ -50,7 +50,7 @@ define(['kineticjs', 'objects'], function(Kinetic, obj){
                     }
                 }
             }
-        }
+        };
 
         // Background Init
         this.loadBackground = function loadBackground(image, stage) {
@@ -71,7 +71,7 @@ define(['kineticjs', 'objects'], function(Kinetic, obj){
             };
 
             backgroundImage.src = 'resources/' + image;
-        }
+        };
 
         // Add trees to all rows
         this.initInitialTrees = function(treesArray, treesLayer){
@@ -98,7 +98,7 @@ define(['kineticjs', 'objects'], function(Kinetic, obj){
             treesArray[4].push(testTreeFive);
             treesArray[5].push(testTreeSix);
             treesArray[6].push(testTreeSeven);
-        }
+        };
 
         // initial random distance between trees
         var distance = randomGenerator(10, 100);
@@ -118,7 +118,7 @@ define(['kineticjs', 'objects'], function(Kinetic, obj){
                     }
                 }
             }
-        }
+        };
 
         // helper for generating random numbers in range
         function randomGenerator(min, max) {

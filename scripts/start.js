@@ -21,7 +21,7 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         container: 'stage-container'
     });
 
-    engine.loadBackground('bkground.png',stage);
+
 
     // array with all trees init
     var trees = [
@@ -35,14 +35,22 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
     ];
     var treesLayer = new Kinetic.Layer();
     stage.add(treesLayer);
+    treesLayer.setZIndex(0);
     engine.initInitialTrees(trees, treesLayer);
+
+    engine.loadBackground('bkground.png',stage);
 
     // main character create and put on screen
     var heroLayer = new Kinetic.Layer();
     stage.add(heroLayer);
+    heroLayer.setZIndex(2);
     var hero = obj.hero(400, 480);
     heroLayer.add(hero);
     hero.start();
+
+    var foodLayer = new Kinetic.Layer();
+    stage.add(foodLayer);
+    foodLayer.setZIndex(3);
 
 
     // start of animation
@@ -79,12 +87,29 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
                 }
             }
         }
-        if (pointOfCollision.y < 530 && pointOfCollision.y > 170 && !hero.getAttr('inCollision')) {
-            if (hero.animation() != 'die') {
-                hero.animation('die');
-                lives();
-                timeout = 1000;
+        //if (pointOfCollision.y < 530 && pointOfCollision.y > 170 && !hero.getAttr('inCollision')) {
+        //    if (hero.animation() != 'die') {
+        //        hero.animation('die');
+        //        lives();
+        //        timeout = 1000;
+        //    }
+        //}
+        
+        if(pointOfCollision.y < 168 && !hero.getAttr('carryingObject')) {
+            for (var foods = 0; foods < displayFood.length; foods++) {
+                if(engine.collision(displayFood[foods], pointOfCollision.x,pointOfCollision.y)) {
+                    hero.setAttr('carryingObject',displayFood[foods]);
+                }
+
             }
+
+        }
+
+        if(pointOfCollision.y > 530 && hero.getAttr('carryingObject')) {
+            var carry = hero.getAttr('carryingObject');
+            hero.setAttr('carryingObject',null);
+            carry.x(hero.x());
+            carry.y(hero.y());
         }
 
         engine.clearTrees(trees);
@@ -144,4 +169,15 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         }
     }
 
+    var displayFood = [
+        obj.food(150,117,'steak'),
+        obj.food(250,117,'drink'),
+        obj.food(350,117,'axe'),
+        obj.food(450,117,'cow'),
+        obj.food(550,117,'gold')
+    ];
+
+    for (var j = 0; j < displayFood.length; j++) {
+        heroLayer.add(displayFood[j]);
+    }
 });

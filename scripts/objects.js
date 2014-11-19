@@ -106,6 +106,7 @@ define(['kineticjs'],
 
                 var blob = new Kinetic.Sprite({
                     inCollision: false,
+                    carryingObject: null,
                     x: x,
                     y: y,
                     width:50,
@@ -142,6 +143,11 @@ define(['kineticjs'],
                 });
                 var frameCounter = 0;
                 blob.on('frameIndexChange', function(){
+                    var carryObject = blob.getAttr('carryingObject');
+                    if(blob.getAttr('carryingObject')) {
+                        carryObject.x(blob.x());
+                        carryObject.y(blob.y());
+                    }
                     if(blob.animation() == 'die'){
                         frameCounter += 1;
                         if(frameCounter >= 10){
