@@ -172,12 +172,12 @@ define(['kineticjs'],
 
             live: function (x, y) {
                 var imageObject = new Image();
-                imageObject.src = 'resources/1.png';
+                imageObject.src = 'resources/2.png';
                 var lobl = new Kinetic.Image({
                     x: x,
                     y: y,
-                    width: 22,
-                    height: 23,
+                    width: 36,
+                    height: 41,
                     image: imageObject
                 });
                 return lobl;

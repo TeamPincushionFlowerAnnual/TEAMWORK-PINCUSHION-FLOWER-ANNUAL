@@ -162,9 +162,9 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
     }
 
     var displayHeads = [
-        obj.live(735, 240),
-        obj.live(735, 265),
-        obj.live(735, 290)
+        obj.live(742, 240),
+        obj.live(742, 300),
+        obj.live(742, 360)
     ];
     for (var i = 0; i < displayHeads.length; i++){
         heroLayer.add(displayHeads[i]);
