@@ -52,6 +52,10 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
     stage.add(foodLayer);
     foodLayer.setZIndex(3);
 
+    var score = 0;
+    var fieldScore = document.getElementById('score');
+    fieldScore.innerText = score.toString();
+
 
     // start of animation
     requestAnimationFrame(executeFrame, document);
@@ -100,9 +104,7 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
                 if(engine.collision(displayFood[foods], pointOfCollision.x,pointOfCollision.y)) {
                     hero.setAttr('carryingObject',displayFood[foods]);
                 }
-
             }
-
         }
 
         if(pointOfCollision.y > 530 && hero.getAttr('carryingObject')) {
@@ -110,11 +112,16 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
             hero.setAttr('carryingObject',null);
             carry.x(hero.x());
             carry.y(hero.y());
+
+            score += carry.getAttr('points');
+            console.log(score);
+            fieldScore.innerText = score.toString();
         }
 
         engine.clearTrees(trees);
         engine.checkTrees(trees,treesLayer);
-        setTimeout(executeFrame, timeout);
+        setTimeout(timeout);
+        requestAnimationFrame(executeFrame);
     }
 
     // Movement Controls

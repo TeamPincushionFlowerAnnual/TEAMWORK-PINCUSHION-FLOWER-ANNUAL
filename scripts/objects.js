@@ -63,27 +63,34 @@ define(['kineticjs'],
             },
 
             food: function (x, y, type) {
+                var points;
                 var imageFile;
                 var imgHeight = 50;
                 var imgWidth = 50;
                 switch (type) {
                     case 'steak':
                         imageFile = 'resources/56.png';
+                        points = 100;
                         break;
                     case 'drink':
                         imageFile = 'resources/57.png';
+                        points = 150;
                         break;
                     case 'axe':
                         imageFile = 'resources/58.png';
+                        points = 185;
                         break;
                     case 'cow':
                         imageFile = 'resources/59.png';
+                        points = 199;
                         break;
                     case 'gold':
                         imageFile = 'resources/61.png';
+                        points = 250;
                         break;
                     default :
                         imageFile = 'resources/56.png';
+                        points = 100;
                 }
 
                 var imageObj = new Image();
@@ -93,7 +100,8 @@ define(['kineticjs'],
                     y: y,
                     width: imgWidth,
                     height: imgHeight,
-                    image: imageObj
+                    image: imageObj,
+                    points: points
                 });
                 imageObj.src = imageFile;
                 return blob;

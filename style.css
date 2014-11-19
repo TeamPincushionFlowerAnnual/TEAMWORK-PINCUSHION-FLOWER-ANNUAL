@@ -20,3 +20,16 @@ body {
   vertical-align: middle;
   color: lightgray;
 }
+
+#score{
+  position: absolute;
+  width: 100px;
+  height: 30px;
+  top: 575px;
+  left: 800px;
+  z-index: 10000;
+  line-height: 30px;
+  font-size: 22px;
+  font-family: Tahoma, sans-serif;
+  color: yellow;
+}
