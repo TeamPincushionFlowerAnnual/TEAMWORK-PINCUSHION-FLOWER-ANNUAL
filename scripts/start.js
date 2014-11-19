@@ -2,7 +2,6 @@
  * Created by micro3x on 13.11.14.
  */
 
-//todo: load modules, init modules (kineticJS, objects, gameEngine)
 require.config({
     paths: {
         objects: 'objects',
@@ -20,8 +19,6 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         height: 600,
         container: 'stage-container'
     });
-
-
 
     // array with all trees init
     var trees = [
@@ -44,21 +41,33 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
     var heroLayer = new Kinetic.Layer();
     stage.add(heroLayer);
     heroLayer.setZIndex(2);
+
     var hero = obj.hero(400, 480);
     heroLayer.add(hero);
     hero.start();
 
-    var foodLayer = new Kinetic.Layer();
-    stage.add(foodLayer);
-    foodLayer.setZIndex(3);
+    // init all things on hero Layer
+    var displayHeads = [
+        obj.live(742, 240),
+        obj.live(742, 300),
+        obj.live(742, 360)
+    ];
+    var displayFood = [
+        obj.food(150,117,'steak'),
+        obj.food(250,117,'drink'),
+        obj.food(350,117,'axe'),
+        obj.food(450,117,'cow'),
+        obj.food(550,117,'gold')
+    ];
+    engine.loadHeroLayer(heroLayer, displayHeads, displayFood);
 
     var score = 0;
     var fieldScore = document.getElementById('score');
     fieldScore.innerText = score.toString();
 
-
     // start of animation
     requestAnimationFrame(executeFrame, document);
+
     function executeFrame() {
         hero.setAttr('inCollision', false);
         var inCollision = true;
@@ -70,8 +79,8 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         };
 
         for (var i = 0; i < trees.length; i++) {
+            var speed = (Math.abs(3 - i));
             for (var j = 0; j < trees[i].length; j++) {
-                var speed = (Math.abs(3 - i));
                 trees[i][j].x(trees[i][j].x() - (speed || 2));
                 inCollision = engine.collision(trees[i][j], pointOfCollision.x, pointOfCollision.y);
                 if (inCollision) {
@@ -93,44 +102,33 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         }
         if (pointOfCollision.y < 530 && pointOfCollision.y > 170 && !hero.getAttr('inCollision')) {
             timeout = 1000;
-            if (hero.animation() != 'die') {
-                hero.animation('die');
-                if(hero.getAttr('carryingObject')){
-                    var reset = hero.getAttr('carryingObject');
-                    hero.setAttr('carryingObject', null);
-                    reset.x(reset.getAttr('baseX'));
-                    reset.y(reset.getAttr('baseY'));
-                }
-                if(lives()){
-                    document.removeEventListener('keydown', movement);
-                    return;
-                }
-
+            engine.heroDie(hero);
+            if(!hasLives()){
+                document.removeEventListener('keydown', movement);
+                return;
             }
         }
         
         if(pointOfCollision.y < 168 && !hero.getAttr('carryingObject')) {
-            for (var foods = 0; foods < displayFood.length; foods++) {
-                if(engine.collision(displayFood[foods], pointOfCollision.x,pointOfCollision.y)) {
-                    hero.setAttr('carryingObject',displayFood[foods]);
-                }
-            }
+            pickupFood(pointOfCollision);
         }
 
         if(pointOfCollision.y > 530 && hero.getAttr('carryingObject')) {
-            var carry = hero.getAttr('carryingObject');
-            hero.setAttr('carryingObject',null);
-            carry.x(hero.x());
-            carry.y(hero.y());
-
-            score += carry.getAttr('points');
-            console.log(score);
+            score += engine.dropFood(hero);
             fieldScore.innerText = score.toString();
         }
 
         engine.clearTrees(trees);
         engine.checkTrees(trees,treesLayer);
         setTimeout(function(){requestAnimationFrame(executeFrame);}, timeout);
+    }
+
+    function pickupFood(pointOfCollision){
+        for (var foods = 0; foods < displayFood.length; foods++) {
+            if(engine.collision(displayFood[foods], pointOfCollision.x,pointOfCollision.y)) {
+                hero.setAttr('carryingObject',displayFood[foods]);
+            }
+        }
     }
 
     // Movement Controls
@@ -167,51 +165,15 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         }
     }
 
-    var displayHeads = [
-        obj.live(742, 240),
-        obj.live(742, 300),
-        obj.live(742, 360)
-    ];
-    for (var i = 0; i < displayHeads.length; i++){
-        heroLayer.add(displayHeads[i]);
-    }
-
+    // Score Keeping And Lives
     var liveCounter = 3;
-    function lives(){
+    function hasLives(){
         liveCounter -= 1;
         displayHeads[liveCounter].image(null);
         if(liveCounter <= 0){
-            var gameover = document.getElementById('final');
-            gameover.style.display = 'table-cell';
-            engine.saveScore( prompt('Give me your name?'), score);
-
-            var list = document.createElement('ul');
-            list.className = "high_scores";
-            var previousScores = engine.loadScores();
-
-            for(var index in previousScores){
-                if(index > 9){
-                    break;
-                }
-                var item = document.createElement('li');
-                item.innerText = (parseInt(index) + 1).toString() + " " + previousScores[index].name + ' - ' + previousScores[index].score;
-                list.appendChild(item);
-            }
-            gameover.appendChild(list);
-            return true;
+            engine.gameOver(score);
+            return false;
         }
-        return false;
-    }
-
-    var displayFood = [
-        obj.food(150,117,'steak'),
-        obj.food(250,117,'drink'),
-        obj.food(350,117,'axe'),
-        obj.food(450,117,'cow'),
-        obj.food(550,117,'gold')
-    ];
-
-    for (var j = 0; j < displayFood.length; j++) {
-        heroLayer.add(displayFood[j]);
+        return true;
     }
 });

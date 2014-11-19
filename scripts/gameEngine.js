@@ -151,5 +151,54 @@ define(['kineticjs', 'objects'], function(Kinetic, obj){
 
             return previousScores;
         }
+
+        this.heroDie = function (hero){
+            if (hero.animation() != 'die') {
+                hero.animation('die');
+                if(hero.getAttr('carryingObject')){
+                    var reset = hero.getAttr('carryingObject');
+                    hero.setAttr('carryingObject', null);
+                    reset.x(reset.getAttr('baseX'));
+                    reset.y(reset.getAttr('baseY'));
+                }
+            }
+        }
+
+        this.loadHeroLayer = function (heroLayer,displayHeads,displayFood){
+            for (var i = 0; i < displayHeads.length; i++){
+                heroLayer.add(displayHeads[i]);
+            }
+            for (var j = 0; j < displayFood.length; j++) {
+                heroLayer.add(displayFood[j]);
+            }
+        }
+
+        this.dropFood = function (hero){
+            var carry = hero.getAttr('carryingObject');
+            hero.setAttr('carryingObject',null);
+            carry.x(hero.x());
+            carry.y(hero.y());
+            return carry.getAttr('points');
+        }
+
+        this.gameOver = function (score){
+            var gameover = document.getElementById('final');
+            gameover.style.display = 'table-cell';
+            this.saveScore( prompt('Give me your name?'), score);
+
+            var list = document.createElement('ul');
+            list.className = "high_scores";
+            var previousScores = this.loadScores();
+
+            for(var index in previousScores){
+                if(index > 9){
+                    break;
+                }
+                var item = document.createElement('li');
+                item.innerText = (parseInt(index) + 1).toString() + " " + previousScores[index].name + ' - ' + previousScores[index].score;
+                list.appendChild(item);
+            }
+            gameover.appendChild(list);
+        }
     };
 });
