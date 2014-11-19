@@ -143,19 +143,13 @@ define(['kineticjs', 'objects'], function(Kinetic, obj){
                 localStorage['scores'] = JSON.stringify(scores);
             }
             var previousScores = JSON.parse(localStorage['scores']);
-            Array.sort(previousScores, function(a,b){
-                return parseInt(a.score) - parseInt(b.score);
+            previousScores.sort(function(a,b){
+                return (b.score) - (a.score) ;
             });
+            console.log(typeof previousScores[0].score);
 
-            var list = document.createElement('ul');
 
-            for(var index in previousScores){
-
-                var item = document.createElement('li');
-                item.innerText = (index+1).toString() + previousScores[index].name + ' - ' + previousScores[index].name;
-                list.appendChild(item);
-            }
-            return list;
+            return previousScores;
         }
     };
 });

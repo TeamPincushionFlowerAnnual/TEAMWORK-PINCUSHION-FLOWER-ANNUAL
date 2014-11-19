@@ -91,13 +91,16 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
                 }
             }
         }
-        //if (pointOfCollision.y < 530 && pointOfCollision.y > 170 && !hero.getAttr('inCollision')) {
-        //    if (hero.animation() != 'die') {
-        //        hero.animation('die');
-        //        lives();
-        //        timeout = 1000;
-        //    }
-        //}
+        if (pointOfCollision.y < 530 && pointOfCollision.y > 170 && !hero.getAttr('inCollision')) {
+            if (hero.animation() != 'die') {
+                hero.animation('die');
+                if(lives()){
+                    document.removeEventListener('keydown', movement);
+                    return;
+                }
+                timeout = 1000;
+            }
+        }
         
         if(pointOfCollision.y < 168 && !hero.getAttr('carryingObject')) {
             for (var foods = 0; foods < displayFood.length; foods++) {
@@ -172,8 +175,26 @@ require(['kineticjs', 'objects', 'gameEngine'], function (Kinetic, obj, engine) 
         liveCounter -= 1;
         displayHeads[liveCounter].image(null);
         if(liveCounter <= 0){
-            document.getElementById('final').style.display = 'table-cell';
+            var gameover = document.getElementById('final');
+            gameover.style.display = 'table-cell';
+            engine.saveScore( prompt('Give me your name?'), score);
+
+            var list = document.createElement('ul');
+            list.className = "high_scores";
+            var previousScores = engine.loadScores();
+
+            for(var index in previousScores){
+                if(index > 9){
+                    break;
+                }
+                var item = document.createElement('li');
+                item.innerText = (parseInt(index) + 1).toString() + " " + previousScores[index].name + ' - ' + previousScores[index].score;
+                list.appendChild(item);
+            }
+            gameover.appendChild(list);
+            return true;
         }
+        return false;
     }
 
     var displayFood = [

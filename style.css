@@ -33,3 +33,8 @@ body {
   font-family: Tahoma, sans-serif;
   color: yellow;
 }
+.high_scores{
+  list-style: none;
+  background-color: rgb(149, 153, 146);
+  border:  1px solid grey;
+}
